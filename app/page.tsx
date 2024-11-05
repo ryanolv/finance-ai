@@ -1,5 +1,5 @@
 import { Button } from "./_components/ui/button";
 
-export default function Home() {
-  return <Button>Click Me</Button>;
+export default function HomePage() {
+  return <Button>Click me</Button>;
 }
