@@ -36,6 +36,11 @@ import {
   PopoverTrigger,
 } from "@/app/_components/ui/popover";
 import { cn } from "@/app/_lib/utils";
+import {
+  CATEGORIES_VALUES_FORM,
+  PAYMENTS_METHODS_VALUES_FORM,
+  TYPE_TRANSACTIONS_VALUES_FORM,
+} from "@/app/_constants/transactions";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -134,9 +139,11 @@ const AddDialogContent = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="DEPOSIT">Depósito</SelectItem>
-                    <SelectItem value="EXPENSE">Gasto</SelectItem>
-                    <SelectItem value="INVESTMENT">Investimento</SelectItem>
+                    {PAYMENTS_METHODS_VALUES_FORM.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -159,17 +166,11 @@ const AddDialogContent = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="CREDIT_CARD">
-                      Cartão de crédito
-                    </SelectItem>
-                    <SelectItem value="DEBIT_CARD">Cartão de débito</SelectItem>
-                    <SelectItem value="BANK-TRANSFER">
-                      Transferência bancária
-                    </SelectItem>
-                    <SelectItem value="BANK-SLIP">Boleto bancário</SelectItem>
-                    <SelectItem value="CASH">Dinheiro</SelectItem>
-                    <SelectItem value="PIX">PIX</SelectItem>
-                    <SelectItem value="OTHER">Outro</SelectItem>
+                    {TYPE_TRANSACTIONS_VALUES_FORM.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -192,15 +193,11 @@ const AddDialogContent = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="HOUSING">Moradia</SelectItem>
-                    <SelectItem value="TRANSPORTATION">Transporte</SelectItem>
-                    <SelectItem value="FOOD">Alimentação</SelectItem>
-                    <SelectItem value="ENTERTAINMENT">Lazer</SelectItem>
-                    <SelectItem value="HEALTH">Saúde</SelectItem>
-                    <SelectItem value="UTILITY">Utilidade</SelectItem>
-                    <SelectItem value="SALARY">Salário</SelectItem>
-                    <SelectItem value="EDUCATION">Educação</SelectItem>
-                    <SelectItem value="OTHER">Outro</SelectItem>
+                    {CATEGORIES_VALUES_FORM.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
