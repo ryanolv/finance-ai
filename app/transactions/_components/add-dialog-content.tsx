@@ -37,60 +37,53 @@ import {
 import { cn } from "@/app/_lib/utils";
 import {
   CATEGORIES_VALUES_FORM,
-  CATEGORY_TRANSACTIONS,
-  PAYMENT_METHODS,
   PAYMENTS_METHODS_VALUES_FORM,
-  TYPE_TRANSACTIONS,
   TYPE_TRANSACTIONS_VALUES_FORM,
 } from "@/app/_constants/transactions";
+import { addTransaction } from "@/app/_actions/transaction/add-transaction";
+import {
+  TransactionCategory,
+  TransactionPaymentMethod,
+  TransactionType,
+} from "@prisma/client";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
   amount: z.coerce.number().min(0),
-  type: z.enum([
-    TYPE_TRANSACTIONS.DEPOSIT,
-    TYPE_TRANSACTIONS.EXPENSE,
-    TYPE_TRANSACTIONS.INVESTMENT,
-  ]),
-  category: z.enum([
-    CATEGORY_TRANSACTIONS.HOUSING,
-    CATEGORY_TRANSACTIONS.TRANSPORTATION,
-    CATEGORY_TRANSACTIONS.FOOD,
-    CATEGORY_TRANSACTIONS.ENTERTAINMENT,
-    CATEGORY_TRANSACTIONS.HEALTH,
-    CATEGORY_TRANSACTIONS.UTILITY,
-    CATEGORY_TRANSACTIONS.SALARY,
-    CATEGORY_TRANSACTIONS.EDUCATION,
-    CATEGORY_TRANSACTIONS.OTHER,
-  ]),
-  paymentMethod: z.enum([
-    PAYMENT_METHODS.CREDIT_CARD,
-    PAYMENT_METHODS.DEBIT_CARD,
-    PAYMENT_METHODS.BANK_TRANSFER,
-    PAYMENT_METHODS.BANK_SLIP,
-    PAYMENT_METHODS.CASH,
-    PAYMENT_METHODS.PIX,
-    PAYMENT_METHODS.OTHER,
-  ]),
+  type: z.nativeEnum(TransactionType),
+  category: z.nativeEnum(TransactionCategory),
+  paymentMethod: z.nativeEnum(TransactionPaymentMethod),
   date: z.date(),
 });
 
-const AddDialogContent = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+type FormSchema = z.infer<typeof formSchema>;
+
+interface AddDialogContentProps {
+  setDialogIsOpen: (isOpen: boolean) => void;
+}
+
+const AddDialogContent = ({ setDialogIsOpen }: AddDialogContentProps) => {
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       amount: 0,
-      type: TYPE_TRANSACTIONS.EXPENSE,
-      category: CATEGORY_TRANSACTIONS.HOUSING,
-      paymentMethod: PAYMENT_METHODS.CREDIT_CARD,
+      type: TYPE_TRANSACTIONS_VALUES_FORM[0].value,
+      category: CATEGORIES_VALUES_FORM[0].value,
+      paymentMethod: PAYMENTS_METHODS_VALUES_FORM[0].value,
       date: new Date(),
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = (data: FormSchema) => {
+    try {
+      addTransaction(data);
+      setDialogIsOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <DialogContent>
       <DialogHeader className="flex flex-col items-center">
@@ -146,7 +139,7 @@ const AddDialogContent = () => {
                   </FormControl>
                   <SelectContent>
                     {TYPE_TRANSACTIONS_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.label}>
+                      <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
                     ))}
@@ -173,7 +166,7 @@ const AddDialogContent = () => {
                   </FormControl>
                   <SelectContent>
                     {PAYMENTS_METHODS_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.label}>
+                      <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
                     ))}
@@ -200,7 +193,7 @@ const AddDialogContent = () => {
                   </FormControl>
                   <SelectContent>
                     {CATEGORIES_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.label}>
+                      <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
                     ))}
