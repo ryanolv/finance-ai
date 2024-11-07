@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/_components/ui/select";
-import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@/app/_components/ui/calendar";
 import {
@@ -47,7 +46,7 @@ import {
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
-  amount: z.number().min(0),
+  amount: z.coerce.number().min(0),
   type: z.enum([
     TYPE_TRANSACTIONS.DEPOSIT,
     TYPE_TRANSACTIONS.EXPENSE,
@@ -82,9 +81,9 @@ const AddDialogContent = () => {
     defaultValues: {
       name: "",
       amount: 0,
-      type: "DEPOSIT",
-      category: "HOUSING",
-      paymentMethod: "CREDIT_CARD",
+      type: TYPE_TRANSACTIONS.EXPENSE,
+      category: CATEGORY_TRANSACTIONS.HOUSING,
+      paymentMethod: PAYMENT_METHODS.CREDIT_CARD,
       date: new Date(),
     },
   });
@@ -146,8 +145,8 @@ const AddDialogContent = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {PAYMENTS_METHODS_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                    {TYPE_TRANSACTIONS_VALUES_FORM.map((item) => (
+                      <SelectItem key={item.value} value={item.label}>
                         {item.label}
                       </SelectItem>
                     ))}
@@ -173,8 +172,8 @@ const AddDialogContent = () => {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {TYPE_TRANSACTIONS_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                    {PAYMENTS_METHODS_VALUES_FORM.map((item) => (
+                      <SelectItem key={item.value} value={item.label}>
                         {item.label}
                       </SelectItem>
                     ))}
@@ -201,7 +200,7 @@ const AddDialogContent = () => {
                   </FormControl>
                   <SelectContent>
                     {CATEGORIES_VALUES_FORM.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                      <SelectItem key={item.value} value={item.label}>
                         {item.label}
                       </SelectItem>
                     ))}
@@ -228,9 +227,13 @@ const AddDialogContent = () => {
                         )}
                       >
                         {field.value ? (
-                          format(field.value, "PPP")
+                          new Intl.DateTimeFormat("pt-BR", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(field.value))
                         ) : (
-                          <span>Pick a date</span>
+                          <span>Selecione uma data</span>
                         )}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
@@ -258,6 +261,7 @@ const AddDialogContent = () => {
                 type="button"
                 className="w-full rounded-xl"
                 variant="outline"
+                onClick={() => form.reset()}
               >
                 Cancelar
               </Button>
