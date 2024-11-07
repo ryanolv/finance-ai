@@ -3,41 +3,13 @@
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import {
-  Transaction,
-  TransactionCategory,
-  TransactionPaymentMethod,
-  TransactionType,
-} from "@prisma/client";
+  CATEGORY_TRANSACTIONS,
+  PAYMENT_METHODS,
+  TYPE_TRANSACTIONS,
+} from "@/app/_constants/transactions";
+import { Transaction, TransactionType } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Circle, Pencil, Trash } from "lucide-react";
-
-const TYPE_TRANSACTIONS = {
-  [TransactionType.DEPOSIT]: "Ganho",
-  [TransactionType.EXPENSE]: "Gasto",
-  [TransactionType.INVESTMENT]: "Investimento",
-};
-
-const CATEGORY_TRANSACTIONS = {
-  [TransactionCategory.HOUSING]: "Moradia",
-  [TransactionCategory.TRANSPORTATION]: "Transporte",
-  [TransactionCategory.FOOD]: "Alimentação",
-  [TransactionCategory.ENTERTAINMENT]: "Lazer",
-  [TransactionCategory.HEALTH]: "Saúde",
-  [TransactionCategory.UTILITY]: "Utilidade",
-  [TransactionCategory.SALARY]: "Salário",
-  [TransactionCategory.EDUCATION]: "Educação",
-  [TransactionCategory.OTHER]: "Outros",
-};
-
-const PAYMENT_METHODS = {
-  [TransactionPaymentMethod.CREDIT_CARD]: "Cartão de Crédito",
-  [TransactionPaymentMethod.DEBIT_CARD]: "Cartão de Débito",
-  [TransactionPaymentMethod.BANK_TRANSFER]: "Transferência Bancária",
-  [TransactionPaymentMethod.BANK_SLIP]: "Boleto Bancário",
-  [TransactionPaymentMethod.CASH]: "Dinheiro",
-  [TransactionPaymentMethod.PIX]: "PIX",
-  [TransactionPaymentMethod.OTHER]: "Outro",
-};
 
 export const columns: ColumnDef<Transaction>[] = [
   {
