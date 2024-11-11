@@ -10,7 +10,8 @@ import {
   TransactionType,
 } from "@prisma/client";
 
-interface AddTransactionsProps {
+interface UpsertTransactionsProps {
+  id?: string;
   name: string;
   amount: number;
   type: TransactionType;
@@ -19,14 +20,18 @@ interface AddTransactionsProps {
   date: Date;
 }
 
-export const addTransaction = async (transaction: AddTransactionsProps) => {
+export const upsertTransaction = async (
+  transaction: UpsertTransactionsProps,
+) => {
   const { userId } = auth();
   if (typeof userId !== "string") {
     throw new Error("Authentication failed: userId is not a string");
   }
   addTransactionSchema.parse({ ...transaction, userId });
-  await db.transaction.create({
-    data: { ...transaction, userId },
+  await db.transaction.upsert({
+    update: { ...transaction, userId },
+    create: { ...transaction, userId },
+    where: { id: transaction?.id ?? "" },
   });
   revalidatePath("/transactions");
 };

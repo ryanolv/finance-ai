@@ -3,7 +3,7 @@
 import { Button } from "@/app/_components/ui/button";
 import { ArrowDownUp } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import AddDialogContent from "./add-dialog-content";
+import UpsertDialogContent from "./upsert-dialog-content";
 import { useState } from "react";
 
 const AddTransactionButton = () => {
@@ -16,7 +16,7 @@ const AddTransactionButton = () => {
           <ArrowDownUp />
         </Button>
       </DialogTrigger>
-      <AddDialogContent setDialogIsOpen={setDialogIsOpen} />
+      <UpsertDialogContent setDialogIsOpen={setDialogIsOpen} />
     </Dialog>
   );
 };

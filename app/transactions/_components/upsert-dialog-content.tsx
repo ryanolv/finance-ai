@@ -40,8 +40,9 @@ import {
   PAYMENTS_METHODS_VALUES_FORM,
   TYPE_TRANSACTIONS_VALUES_FORM,
 } from "@/app/_constants/transactions";
-import { addTransaction } from "@/app/_actions/transaction/add-transaction";
+import { upsertTransaction } from "@/app/_actions/transaction/add-transaction";
 import {
+  Transaction,
   TransactionCategory,
   TransactionPaymentMethod,
   TransactionType,
@@ -58,26 +59,33 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface AddDialogContentProps {
+interface UpsertDialogContentProps {
+  currentData?: Transaction;
+  transactionId?: string;
   setDialogIsOpen: (isOpen: boolean) => void;
 }
 
-const AddDialogContent = ({ setDialogIsOpen }: AddDialogContentProps) => {
+const UpsertDialogContent = ({
+  currentData,
+  setDialogIsOpen,
+  transactionId,
+}: UpsertDialogContentProps) => {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      amount: 0,
-      type: TYPE_TRANSACTIONS_VALUES_FORM[0].value,
-      category: CATEGORIES_VALUES_FORM[0].value,
-      paymentMethod: PAYMENTS_METHODS_VALUES_FORM[0].value,
-      date: new Date(),
+      name: currentData?.name || "",
+      amount: Number(currentData?.amount) || 0,
+      type: currentData?.type || TYPE_TRANSACTIONS_VALUES_FORM[0].value,
+      category: currentData?.category || CATEGORIES_VALUES_FORM[0].value,
+      paymentMethod:
+        currentData?.paymentMethod || PAYMENTS_METHODS_VALUES_FORM[0].value,
+      date: currentData ? new Date(currentData.date) : new Date(),
     },
   });
 
   const onSubmit = (data: FormSchema) => {
     try {
-      addTransaction(data);
+      upsertTransaction({ ...data, id: transactionId });
       setDialogIsOpen(false);
       form.reset();
     } catch (error) {
@@ -87,7 +95,9 @@ const AddDialogContent = ({ setDialogIsOpen }: AddDialogContentProps) => {
   return (
     <DialogContent>
       <DialogHeader className="flex flex-col items-center">
-        <DialogTitle>Adicionar Transação</DialogTitle>
+        <DialogTitle>
+          {!!currentData ? "Editar" : "Adicionar"} Transação
+        </DialogTitle>
         <DialogDescription>Insira as informações abaixo</DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -269,4 +279,4 @@ const AddDialogContent = ({ setDialogIsOpen }: AddDialogContentProps) => {
   );
 };
 
-export default AddDialogContent;
+export default UpsertDialogContent;
