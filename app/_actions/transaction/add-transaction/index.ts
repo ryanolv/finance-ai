@@ -34,4 +34,5 @@ export const upsertTransaction = async (
     where: { id: transaction?.id ?? "" },
   });
   revalidatePath("/transactions");
+  revalidatePath("/");
 };
