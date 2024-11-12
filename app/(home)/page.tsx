@@ -3,12 +3,28 @@ import { redirect } from "next/navigation";
 import Summary from "./_components/summary";
 import TransactionHistory from "./_components/transaction-history";
 import SelectMonth from "./_components/select-month";
+import { getDashboard } from "../_data-layer/get-dashboard";
+import { isMatch } from "date-fns";
 
-const HomePage = async () => {
+interface HomeProps {
+  searchParams: {
+    month: string;
+  };
+}
+
+const HomePage = async ({ searchParams: { month } }: HomeProps) => {
   const { userId } = auth();
   if (!userId) {
     redirect("/login");
   }
+
+  const monthIsInvalid = !month || !isMatch(month, "MM");
+  if (monthIsInvalid) {
+    redirect("/?month=01");
+  }
+
+  const dashboard = await getDashboard(month);
+
   return (
     <div className="space-y-7 p-8">
       <div className="flex justify-between">
@@ -16,7 +32,7 @@ const HomePage = async () => {
         <SelectMonth />
       </div>
       <div className="grid grid-cols-12 gap-8">
-        <Summary />
+        <Summary {...dashboard} />
         <TransactionHistory />
       </div>
     </div>
