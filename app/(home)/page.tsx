@@ -5,6 +5,7 @@ import TransactionHistory from "./_components/transaction-history";
 import SelectMonth from "./_components/select-month";
 import { getDashboard } from "../_data-layer/get-dashboard";
 import { isMatch } from "date-fns";
+import { TransactionsPieChart } from "./_components/transactions-pie-chart";
 
 interface HomeProps {
   searchParams: {
@@ -34,6 +35,7 @@ const HomePage = async ({ searchParams: { month } }: HomeProps) => {
       <div className="grid grid-cols-12 gap-8">
         <Summary {...dashboard} />
         <TransactionHistory />
+        <TransactionsPieChart {...dashboard} />
       </div>
     </div>
   );

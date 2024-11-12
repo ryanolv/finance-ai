@@ -1,6 +1,8 @@
 import "server-only";
-import { db } from "../_lib/prisma";
+import { db } from "../../_lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { TransactionType } from "@prisma/client";
+import { TransactionsPercentagePerType } from "./types";
 
 export const getDashboard = async (month: string) => {
   const { userId } = auth();
@@ -39,6 +41,31 @@ export const getDashboard = async (month: string) => {
     )._sum.amount,
   );
   const balance = depositsTotal - investmentsTotal - expensesTotal;
+  const transactionsTotal = Number(
+    (
+      await db.transaction.aggregate({
+        where,
+        _sum: { amount: true },
+      })
+    )._sum.amount,
+  );
+  const typesPercentage: TransactionsPercentagePerType = {
+    [TransactionType.DEPOSIT]: Math.round(
+      (depositsTotal / transactionsTotal) * 100,
+    ),
+    [TransactionType.INVESTMENT]: Math.round(
+      (investmentsTotal / transactionsTotal) * 100,
+    ),
+    [TransactionType.EXPENSE]: Math.round(
+      (expensesTotal / transactionsTotal) * 100,
+    ),
+  };
 
-  return { balance, depositsTotal, investmentsTotal, expensesTotal };
+  return {
+    balance,
+    depositsTotal,
+    investmentsTotal,
+    expensesTotal,
+    typesPercentage,
+  };
 };
