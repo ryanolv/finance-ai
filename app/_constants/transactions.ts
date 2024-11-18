@@ -4,13 +4,13 @@ import {
   TransactionType,
 } from "@prisma/client";
 
-export const TYPE_TRANSACTIONS = {
+export const TYPE_TRANSACTIONS_LABELS = {
   [TransactionType.DEPOSIT]: "Ganho",
   [TransactionType.EXPENSE]: "Gasto",
   [TransactionType.INVESTMENT]: "Investimento",
 };
 
-export const CATEGORY_TRANSACTIONS = {
+export const CATEGORY_TRANSACTIONS_LABELS = {
   [TransactionCategory.HOUSING]: "Moradia",
   [TransactionCategory.TRANSPORTATION]: "Transporte",
   [TransactionCategory.FOOD]: "Alimentação",
@@ -22,7 +22,7 @@ export const CATEGORY_TRANSACTIONS = {
   [TransactionCategory.OTHER]: "Outros",
 };
 
-export const PAYMENT_METHODS = {
+export const PAYMENT_METHODS_LABELS = {
   [TransactionPaymentMethod.CREDIT_CARD]: "Cartão de Crédito",
   [TransactionPaymentMethod.DEBIT_CARD]: "Cartão de Débito",
   [TransactionPaymentMethod.BANK_TRANSFER]: "Transferência Bancária",

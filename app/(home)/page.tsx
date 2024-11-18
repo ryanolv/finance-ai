@@ -1,11 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Summary from "./_components/summary";
-import TransactionHistory from "./_components/transaction-history";
+import LastTransactions from "./_components/last-transactions";
 import SelectMonth from "./_components/select-month";
 import { getDashboard } from "../_data-layer/get-dashboard";
 import { isMatch } from "date-fns";
 import { TransactionsPieChart } from "./_components/transactions-pie-chart";
+import ExpensesPerCategory from "./_components/expenses-per-category";
 
 interface HomeProps {
   searchParams: {
@@ -34,8 +35,11 @@ const HomePage = async ({ searchParams: { month } }: HomeProps) => {
       </div>
       <div className="grid grid-cols-12 gap-8">
         <Summary {...dashboard} />
-        <TransactionHistory />
+        <LastTransactions lastTransactions={dashboard.lastTransactions} />
         <TransactionsPieChart {...dashboard} />
+        <ExpensesPerCategory
+          expensesPerCategory={dashboard.totalExpensePerCategory}
+        />
       </div>
     </div>
   );

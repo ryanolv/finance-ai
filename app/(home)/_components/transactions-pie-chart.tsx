@@ -62,7 +62,7 @@ export function TransactionsPieChart({
   ];
 
   return (
-    <Card className="col-span-4 flex flex-col rounded-2xl p-12">
+    <Card className="col-span-3 flex flex-col rounded-2xl p-12">
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
@@ -78,7 +78,7 @@ export function TransactionsPieChart({
               dataKey="amount"
               nameKey="type"
               innerRadius={75}
-              strokeWidth={5}
+              // strokeWidth={5}
             />
           </PieChart>
         </ChartContainer>

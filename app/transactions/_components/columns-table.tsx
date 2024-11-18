@@ -2,8 +2,8 @@
 
 import { Button } from "@/app/_components/ui/button";
 import {
-  CATEGORY_TRANSACTIONS,
-  PAYMENT_METHODS,
+  CATEGORY_TRANSACTIONS_LABELS,
+  PAYMENT_METHODS_LABELS,
 } from "@/app/_constants/transactions";
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
@@ -24,12 +24,12 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "category",
     header: "Categoria",
-    cell: ({ row }) => CATEGORY_TRANSACTIONS[row.original.category],
+    cell: ({ row }) => CATEGORY_TRANSACTIONS_LABELS[row.original.category],
   },
   {
     accessorKey: "paymentMethod",
     header: "Método",
-    cell: ({ row }) => PAYMENT_METHODS[row.original.paymentMethod],
+    cell: ({ row }) => PAYMENT_METHODS_LABELS[row.original.paymentMethod],
   },
   {
     accessorKey: "date",
