@@ -5,9 +5,16 @@ import {
   CardFooter,
   CardHeader,
 } from "../_components/ui/card";
-import { Button } from "../_components/ui/button";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import AcquirePlanButton from "./_components/acquire-plan-button";
 
 const SubscriptionPage = () => {
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/login");
+  }
+
   return (
     <div className="space-y-6 p-6">
       <h1 className="text-2xl font-bold">Assinatura</h1>
@@ -49,7 +56,7 @@ const SubscriptionPage = () => {
             </p>
           </CardContent>
           <CardFooter className="p-10">
-            <Button className="w-full rounded-full">Adquirir plano</Button>
+            <AcquirePlanButton />
           </CardFooter>
         </Card>
       </div>
