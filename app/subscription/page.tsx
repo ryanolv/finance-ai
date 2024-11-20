@@ -9,8 +9,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import AcquirePlanButton from "./_components/acquire-plan-button";
 import { Badge } from "../_components/ui/badge";
-import { db } from "../_lib/prisma";
-import { endOfMonth, startOfMonth } from "date-fns";
+import { getCurrentMonthTransactions } from "../_data-layer/get-current-month-transactions";
 
 const SubscriptionPage = async () => {
   const { userId } = auth();
@@ -18,15 +17,7 @@ const SubscriptionPage = async () => {
     redirect("/login");
   }
   const user = await clerkClient().users.getUser(userId);
-  const currentMonthTransactins = await db.transaction.count({
-    where: {
-      userId,
-      createdAt: {
-        gte: startOfMonth(new Date()),
-        lt: endOfMonth(new Date()),
-      },
-    },
-  });
+  const currentMonthTransactins = await getCurrentMonthTransactions();
   const hasPremiumPlan = user?.publicMetadata.subscription === "premium";
   return (
     <div className="space-y-6 p-6">

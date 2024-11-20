@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
+import { canUserAddTransaction } from "@/app/_data-layer/can-user-add-transaction";
 import AddTransactionButton from "@/app/transactions/_components/add-transaction-button";
 import { ReactNode } from "react";
 
@@ -14,12 +15,13 @@ interface SummaryDetailsProps {
   size?: "small" | "medium" | "large";
 }
 
-const SummaryDetails = ({
+const SummaryDetails = async ({
   title,
   icon,
   amount,
   size = "small",
 }: SummaryDetailsProps) => {
+  const userCanAddTransaction = await canUserAddTransaction();
   const getStyleTitle = () => {
     switch (title) {
       case "Saldo":
@@ -73,7 +75,9 @@ const SummaryDetails = ({
         >
           R$ {amount}
         </p>
-        {size === "large" && <AddTransactionButton />}
+        {size === "large" && (
+          <AddTransactionButton userCanAddTransaction={userCanAddTransaction} />
+        )}
       </CardContent>
     </Card>
   );
