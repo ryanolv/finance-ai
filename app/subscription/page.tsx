@@ -9,6 +9,8 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import AcquirePlanButton from "./_components/acquire-plan-button";
 import { Badge } from "../_components/ui/badge";
+import { db } from "../_lib/prisma";
+import { endOfMonth, startOfMonth } from "date-fns";
 
 const SubscriptionPage = async () => {
   const { userId } = auth();
@@ -16,14 +18,27 @@ const SubscriptionPage = async () => {
     redirect("/login");
   }
   const user = await clerkClient().users.getUser(userId);
+  const currentMonthTransactins = await db.transaction.count({
+    where: {
+      userId,
+      createdAt: {
+        gte: startOfMonth(new Date()),
+        lt: endOfMonth(new Date()),
+      },
+    },
+  });
   const hasPremiumPlan = user?.publicMetadata.subscription === "premium";
-
   return (
     <div className="space-y-6 p-6">
       <h1 className="text-2xl font-bold">Assinatura</h1>
       <div className="flex gap-6">
         <Card className="w-[450px]">
-          <CardHeader className="border-b border-solid py-8">
+          <CardHeader className="relative border-b border-solid py-8">
+            {!hasPremiumPlan && (
+              <Badge className="absolute left-4 top-4 bg-primary/15 font-bold text-primary hover:bg-primary/15">
+                Atual
+              </Badge>
+            )}
             <h2 className="text-center text-2xl font-semibold">Plano Básico</h2>
             <div className="flex items-center justify-center gap-3">
               <span className="text-4xl">R$</span>
@@ -33,8 +48,8 @@ const SubscriptionPage = async () => {
           </CardHeader>
           <CardContent className="space-y-4 p-10">
             <p className="flex items-center gap-1">
-              <CheckIcon color="green" size={24} /> Apenas 10 transações por dia
-              (7/10)
+              <CheckIcon color="green" size={24} /> Apenas 10 transações por mês
+              ({currentMonthTransactins}/10)
             </p>
             <p className="flex items-center gap-1">
               <X size={24} color="red" /> Relatórios de IA ilimitados
