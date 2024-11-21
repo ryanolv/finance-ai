@@ -10,6 +10,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Trash } from "lucide-react";
 import SelectBadge from "./select-badge";
 import EditTransactionButton from "./edit-transaction-button";
+import { formatCurrency } from "@/app/_utils/currency";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -46,11 +47,7 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "amount",
     header: "Valor",
-    cell: ({ row }) =>
-      new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(Number(row.original.amount)),
+    cell: ({ row }) => formatCurrency(Number(row.original.amount)),
   },
   {
     accessorKey: "actions",

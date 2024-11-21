@@ -5,6 +5,7 @@ import {
   CardTitle,
 } from "@/app/_components/ui/card";
 import { canUserAddTransaction } from "@/app/_data-layer/can-user-add-transaction";
+import { formatCurrency } from "@/app/_utils/currency";
 import AddTransactionButton from "@/app/transactions/_components/add-transaction-button";
 import { ReactNode } from "react";
 
@@ -73,7 +74,7 @@ const SummaryDetails = async ({
         <p
           className={`font-bold ${size === "large" ? "text-4xl" : "text-2xl"}`}
         >
-          R$ {amount}
+          {formatCurrency(amount)}
         </p>
         {size === "large" && (
           <AddTransactionButton userCanAddTransaction={userCanAddTransaction} />
