@@ -34,10 +34,14 @@ const AddTransactionButton = ({
                 <ArrowDownUp />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
-              {userCanAddTransaction &&
-                "Você atingiu o limite de transações. Atualize seu plano para adicionar mais transações."}
-            </TooltipContent>
+            {!userCanAddTransaction ? (
+              <TooltipContent>
+                <p>
+                  Você atingiu o limite de transações. Atualize seu plano para
+                  adicionar mais transações.
+                </p>
+              </TooltipContent>
+            ) : null}
           </Tooltip>
         </TooltipProvider>
       </DialogTrigger>
