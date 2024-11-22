@@ -3,8 +3,14 @@ import { columns } from "./_components/columns-table";
 import AddTransactionButton from "./_components/add-transaction-button";
 import { getTransactions } from "../_data-layer/get-transactions";
 import { canUserAddTransaction } from "../_data-layer/can-user-add-transaction";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
 
 const TransactionsPage = async () => {
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/login");
+  }
   const transactions = await getTransactions();
   const userCanAddTransaction = await canUserAddTransaction();
 
